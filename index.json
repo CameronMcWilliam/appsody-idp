@@ -61,5 +61,30 @@
         "artifacts": [
             "/javascript/nodejs/bin/npm-start.sh"
         ]
-    }
+    },
+    {
+        "name": "appsody-swift",
+        "description": "Swift sample",
+        "language": "swift",
+        "framework": "swift",
+        "devpack": {
+            "self": "/swift/appsody-swift/idp.yaml"
+        },
+        "artifacts": [
+            "/swift/appsody-swift/bin/swift-build.sh"
+        ]
+    },
+    {
+        "name": "appsody-nodejs",
+        "description": "NodeJS sample",
+        "language": "javascript",
+        "framework": "nodejs",
+        "devpack": {
+            "self": "/javascript/appsody-nodejs/idp.yaml"
+        },
+        "artifacts": [
+            "/javascript/appsody-nodejs/bin/npm-start.sh",
+            "/javascript/appsody-nodejs/bin/npm-restart.sh"            
+        ]
+    }    
 ]

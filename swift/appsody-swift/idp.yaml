@@ -1,0 +1,48 @@
+apiVersion: codewind.dev/v1alpha1
+metadata: 
+  name: appsody-swift-pack
+  language: swift 
+  framework: kitura 
+  version: 0.0.1 
+  maintainers:  
+  - name: Jonathan West
+    email: jgwest@email.com
+    githubID: jgwest
+spec:
+  dev: 
+    watched:
+      ignoredPaths:
+      - /.build
+      - /.git
+    uploadFilter:
+      ignoredPaths:
+      - /.build
+    typeDetection:
+    - pathSelector:
+        filenameWildcard: Package.swift
+  runtime:
+    image: appsody/kitura:latest
+    overrideEntrypointTailToFile: /dev/null
+    endpoints:
+      containerHealth: /health
+      appRoot: /user-app
+    ports:
+      internalHttpPort: 8080
+    logs:
+    - type: some.type
+      path: /logs/(etc)
+  tasks:
+    - name: swift-build
+      type: Runtime
+      command:
+      - "cd /project/user-app2/ && swift run >> /var/log/app.log 2>&1 &"
+      workingDirectory: /project
+      logs:
+      - type: swift.build
+        path: /logs/(etc)
+      sourceMapping:
+        destPath: "/project/user-app2"
+        setExecuteBit: true
+  scenarios:
+    - name: full-build
+      tasks: ["swift-build"]
