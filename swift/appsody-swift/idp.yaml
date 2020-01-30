@@ -12,11 +12,7 @@ spec:
   dev: 
     watched:
       ignoredPaths:
-      - /.build
       - /.git
-    uploadFilter:
-      ignoredPaths:
-      - /.build
     typeDetection:
     - pathSelector:
         filenameWildcard: Package.swift
@@ -35,7 +31,13 @@ spec:
     - name: swift-build
       type: Runtime
       command:
-      - "cd /project/user-app2/ && swift run >> /var/log/app.log 2>&1 &"
+      - "date && echo Stopping the swift process"
+      - "pkill swift || echo No Swift process found"
+      - "date && echo Building Swift application"
+      - "cd /project/user-app2/ && swift build &"
+      - "wait $!"
+      - "date && echo Running Swift application"
+      - "cd /project/user-app2/ && swift run &"
       workingDirectory: /project
       logs:
       - type: swift.build
@@ -43,6 +45,22 @@ spec:
       sourceMapping:
         destPath: "/project/user-app2"
         setExecuteBit: true
+    - name: swift-run
+      type: Runtime
+      command:
+      - "date && echo Stopping the swift process"
+      - "pkill swift || echo No Swift process found"
+      - "date && echo Running Swift application"
+      - "cd /project/user-app2/ && swift run &"
+      workingDirectory: /project
+      logs:
+      - type: swift.run
+        path: /logs/(etc)
+      sourceMapping:
+        destPath: "/project/user-app2"
+        setExecuteBit: true
   scenarios:
     - name: full-build
       tasks: ["swift-build"]
+    - name: incremental-build
+      tasks: ["swift-run"]
